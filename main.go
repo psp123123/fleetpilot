@@ -36,6 +36,7 @@ func main() {
 		user.GET("/", usermanager.User)
 		user.POST("/registry", usermanager.CreateUser)
 	}
+	router.POST("/login", usermanager.Login)
 
 	// 启动服务
 	router.Run("0.0.0.0:8000")
