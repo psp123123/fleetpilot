@@ -20,7 +20,7 @@ func InitDB() (*gorm.DB, error) {
 
 	// 拼接连接信息
 	dsn := fmt.Sprintf(
-		"%s:%s@(%s/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		"%s:%s@(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		m.Username,
 		m.Password,
 		m.Address,
