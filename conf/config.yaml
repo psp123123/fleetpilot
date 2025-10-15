@@ -1,2 +1,11 @@
 log:
     level: debug
+
+# mysql相关配
+mysql:
+    address: '192.168.56.11:3306'
+    username: root
+    password: '123456'
+    dbname: 'fleetpilot'
+    timeout: 10
+    multiStatements: true

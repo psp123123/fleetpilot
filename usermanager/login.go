@@ -1,6 +1,7 @@
 package usermanager
 
 import (
+	"fleetpilot/backend"
 	"fleetpilot/common/logger"
 	"net/http"
 
@@ -24,10 +25,19 @@ func Login(ctx *gin.Context) {
 			"message": "请求参数错误" + err.Error(),
 		})
 	}
-	logger.Debug("获取的登陆信息：", logininfo.Username)
+
+	cond := map[string]interface{}{
+		"username": logininfo.Username,
+	}
+	// 获取数据库信息
+	ret := backend.GetMysqlOneData("user", cond)
+	logger.Info("get data", ret)
+
 	ctx.JSON(http.StatusOK, gin.H{
-		"code":    200,
-		"token":   "123",
+		"code": 200,
+
+		"token": "123",
+
 		"message": "ok",
 	})
 }

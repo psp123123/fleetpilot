@@ -8,4 +8,6 @@ func User(ctx *gin.Context) {
 }
 
 // 创建用户接口
-func CreateUser(ctx *gin.Context) {}
+func CreateUser(ctx *gin.Context) {
+
+}

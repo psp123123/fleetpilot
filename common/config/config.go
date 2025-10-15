@@ -7,18 +7,34 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var (
+	// 全局变量
+	GlobalCfg *Config
+)
+
 // Config 结构体对应 config.yaml
 type Config struct {
-	Log struct {
+	Log   LogConfig
+	Mysql MysqlConfig
+}
+
+// logger 相关配置内容
+type LogConfig struct {
+	Logger struct {
 		Level string `yaml:"level"`
 	} `yaml:"log"`
 }
 
-// 默认配置内容
-var defaultConfig = Config{
-	Log: struct {
-		Level string `yaml:"level"`
-	}{Level: "info"},
+// mysql相关配置内容
+type MysqlConfig struct {
+	Mysqler struct {
+		Address         string `yaml:"address"`
+		Username        string `yaml:"username"`
+		Password        string `yaml:"password"`
+		Dbname          string `yaml:"dbname"`
+		Timeout         int    `yaml:"timeout"`
+		MultiStatements bool   `yaml:"multiStatements"`
+	} `yaml:"mysql"`
 }
 
 // ensureConfigExists 检查并初始化配置文件
@@ -28,17 +44,8 @@ func EnsureConfigExists(path string) error {
 		return nil
 	}
 
-	fmt.Println("配置文件不存在，正在创建默认配置:", path)
+	fmt.Println("配置文件不存在，需要创建配置:", path)
 
-	data, err := yaml.Marshal(defaultConfig)
-	if err != nil {
-		return fmt.Errorf("生成默认配置失败: %v", err)
-	}
-
-	// 创建并写入默认配置
-	if err := os.WriteFile(path, data, 0644); err != nil {
-		return fmt.Errorf("写入默认配置文件失败: %v", err)
-	}
 	return nil
 }
 
@@ -55,4 +62,9 @@ func LoadConfig(path string) (*Config, error) {
 	}
 
 	return &cfg, nil
+}
+
+// GetConfig 返回全局配置
+func GetConfig() *Config {
+	return GlobalCfg
 }
