@@ -24,7 +24,7 @@ func Login(ctx *gin.Context) {
 			"message": "请求参数错误" + err.Error(),
 		})
 	}
-	logger.Debug("获取的登陆信息：", logininfo)
+	logger.Debug("获取的登陆信息：", logininfo.Username)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":    200,
 		"token":   "123",
