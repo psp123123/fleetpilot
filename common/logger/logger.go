@@ -30,6 +30,17 @@ var levelMap = map[string]LogLevel{
 	"error": ERROR,
 }
 
+// colorMap 日志级别对应的终端颜色
+var colorMap = map[LogLevel]string{
+	DEBUG: "",         // 默认颜色
+	INFO:  "\033[32m", // 绿色
+	WARN:  "\033[33m", // 黄色
+	ERROR: "\033[31m", // 红色
+}
+
+// resetColor 终端重置颜色
+const resetColor = "\033[0m"
+
 // InitLogger 初始化日志系统
 func InitLogger(levelStr string, writer io.Writer) {
 	levelStr = strings.ToLower(levelStr)
@@ -47,11 +58,17 @@ func InitLogger(levelStr string, writer io.Writer) {
 	logger = log.New(writer, "", log.LstdFlags|log.Lshortfile)
 }
 
-// internalLog 输出日志（根据级别过滤）
+// internalLog 输出日志（根据级别过滤，并添加颜色）
 func internalLog(level LogLevel, prefix string, msg string) {
 	if level < currentLevel {
 		return
 	}
+
+	color := colorMap[level]
+	if color != "" {
+		msg = fmt.Sprintf("%s%s%s", color, msg, resetColor)
+	}
+
 	logger.Output(3, fmt.Sprintf("[%s] %s", prefix, msg))
 }
 

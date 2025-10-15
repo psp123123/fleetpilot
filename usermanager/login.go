@@ -33,7 +33,7 @@ func Login(ctx *gin.Context) {
 	// 获取数据库信息
 	ret, retErr := backend.GetMysqlOneData("user", cond)
 	if retErr != nil || len(ret) == 0 {
-		logger.Error("用户无效")
+		logger.Error("查询用户失败")
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"code":    401,
 			"token":   "",
