@@ -27,6 +27,7 @@ func main() {
 	}
 	config.GlobalCfg = cfg
 	logger.InitLogger(config.GlobalCfg.Log.Level, nil)
+	fmt.Printf("Loaded config: %+v\n", config.GlobalCfg)
 
 	// 3. 配置路由
 
