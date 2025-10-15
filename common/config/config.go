@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -25,6 +26,13 @@ type Config struct {
 		Timeout         int    `yaml:"timeout"`
 		MultiStatements bool   `yaml:"multiStatements"`
 	} `yaml:"mysql"`
+	Jwt struct {
+		AccessSecret  string        `yaml:"accessSecret"`
+		RefreshSecret string        `yaml:"refreshSecret"`
+		AccessExp     time.Duration `yaml:"accessExp"`
+		RefreshExp    time.Duration `yaml:"refreshExp"`
+		IssuedAt      string        `yaml:"issuedAt"`
+	} `yaml:"jwt"`
 }
 
 // ensureConfigExists 检查并初始化配置文件

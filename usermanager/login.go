@@ -29,9 +29,11 @@ func Login(ctx *gin.Context) {
 	cond := map[string]interface{}{
 		"username": logininfo.Username,
 	}
-	logger.Debug("get client info user:", cond["username"])
+	logger.Debug("get client info user:%v", cond["username"])
+
 	// 获取数据库信息
 	ret, retErr := backend.GetMysqlOneData("user", cond)
+	logger.Debug("get info from mysql user info:%v", ret)
 	if retErr != nil || len(ret) == 0 {
 		logger.Error("查询用户失败")
 		ctx.JSON(http.StatusUnauthorized, gin.H{
@@ -41,7 +43,7 @@ func Login(ctx *gin.Context) {
 		})
 	}
 
-	logger.Info("get data", ret)
+	logger.Info("get data:%v", ret)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 200,

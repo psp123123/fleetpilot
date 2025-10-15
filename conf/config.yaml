@@ -9,3 +9,11 @@ mysql:
   dbname: 'fleetpilot'
   timeout: 10
   multiStatements: true
+
+# JWT相关
+jwt:
+  accessSecret: 12345
+  refreshSecret: 12345
+  accessExp: 15
+  refreshExp: 7
+  issuedAt: 'abcd'
