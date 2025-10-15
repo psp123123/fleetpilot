@@ -27,7 +27,7 @@ func InitDB() (*gorm.DB, error) {
 	)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		logger.Error("init db error:", err)
+		logger.Error("init db error:%v,连接信息:%s", err, dsn)
 		return nil, err
 	}
 
