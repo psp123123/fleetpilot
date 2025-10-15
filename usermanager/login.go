@@ -32,18 +32,32 @@ func Login(ctx *gin.Context) {
 	logger.Debug("get client info user:%v", cond["username"])
 
 	// 获取数据库信息
-	ret, retErr := backend.GetMysqlOneData("user", cond)
-	logger.Debug("get info from mysql user info:%v", ret)
-	if retErr != nil || len(ret) == 0 {
+	retUsername, retErr := backend.GetMysqlOneData("user", cond)
+	logger.Debug("get info from mysql user info:%v", retUsername)
+
+	// 生成token
+	accessToken, err := GenerateAccessToken(retUsername.UserID, retUsername.Username)
+	if err != nil {
+		logger.Error("genera access token error:%v", err)
+	}
+	refreshToken, err := GenerateRefreshoken(retUsername.UserID, retUsername.Username)
+	if err != nil {
+		logger.Error("genera refresh token error:%v", err)
+	}
+
+	if retErr != nil || len(retUsername.Username) == 0 {
 		logger.Error("查询用户失败")
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"code":    401,
-			"token":   "",
 			"message": "user invalid",
+			"data": gin.H{
+				"accessToken":  accessToken,
+				"refreshToken": refreshToken,
+			},
 		})
 	}
 
-	logger.Info("get data:%v", ret)
+	logger.Info("get data:%v", retUsername)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 200,
