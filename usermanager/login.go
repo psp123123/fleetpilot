@@ -35,35 +35,33 @@ func Login(ctx *gin.Context) {
 	retUsername, retErr := backend.GetMysqlOneData("user", cond)
 	logger.Debug("get info from mysql user info:%v", retUsername)
 
-	// 生成token
-	accessToken, err := GenerateAccessToken(retUsername.UserID, retUsername.Username)
-	if err != nil {
-		logger.Error("genera access token error:%v", err)
-	}
-	refreshToken, err := GenerateRefreshoken(retUsername.UserID, retUsername.Username)
-	if err != nil {
-		logger.Error("genera refresh token error:%v", err)
-	}
-
 	if retErr != nil || len(retUsername.Username) == 0 {
 		logger.Error("查询用户失败")
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"code":    401,
 			"message": "user invalid",
+			"token":   "",
+		})
+	} else {
+		// 生成token
+		accessToken, err := GenerateAccessToken(retUsername.UserID, retUsername.Username)
+		if err != nil {
+			logger.Error("genera access token error:%v", err)
+		}
+		refreshToken, err := GenerateRefreshoken(retUsername.UserID, retUsername.Username)
+		if err != nil {
+			logger.Error("genera refresh token error:%v", err)
+		}
+		logger.Info("get data:%v", retUsername)
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"code": 200,
+
 			"data": gin.H{
 				"accessToken":  accessToken,
 				"refreshToken": refreshToken,
 			},
+			"message": "ok",
 		})
 	}
-
-	logger.Info("get data:%v", retUsername)
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"code": 200,
-
-		"token": "123",
-
-		"message": "ok",
-	})
 }
