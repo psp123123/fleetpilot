@@ -60,7 +60,7 @@ func LoadConfig(path string) (*Config, error) {
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return nil, fmt.Errorf("解析配置文件失败: %v", err)
 	}
-
+	GlobalCfg = &cfg
 	return &cfg, nil
 }
 
