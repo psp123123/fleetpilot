@@ -9,8 +9,8 @@ import (
 
 // 定义登陆信息结构体
 type LoginInfo struct {
-	Username string
-	Password string
+	Username string `json:"user"`
+	Password string `json:"passwd"`
 }
 
 func Login(ctx *gin.Context) {
