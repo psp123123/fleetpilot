@@ -29,6 +29,7 @@ func Login(ctx *gin.Context) {
 	cond := map[string]interface{}{
 		"username": logininfo.Username,
 	}
+	logger.Debug("get client info user:", cond["username"])
 	// 获取数据库信息
 	ret := backend.GetMysqlOneData("user", cond)
 	logger.Info("get data", ret)
