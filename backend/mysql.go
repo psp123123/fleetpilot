@@ -49,12 +49,13 @@ func InitDB() (*gorm.DB, error) {
 }
 
 // 从mysql读取单条记录，传入任意参数，返回单条map
-func GetMysqlOneData(queryTable string, conDiction map[string]interface{}) map[string]interface{} {
+func GetMysqlOneData(queryTable string, conDiction map[string]interface{}) (map[string]interface{}, error) {
 
 	//data := make(map[string]interface{})
 	db, err := InitDB()
 	if err != nil {
 		logger.Error("mysql初始化失败:", err)
+		return nil, err
 	}
 
 	data := make(map[string]interface{})
@@ -62,8 +63,8 @@ func GetMysqlOneData(queryTable string, conDiction map[string]interface{}) map[s
 	result := db.Table(queryTable).Where(conDiction).Take(&data)
 	if result.Error != nil {
 		logger.Error("查询失败:", result.Error)
-		return nil
+		return nil, result.Error
 	}
 
-	return data
+	return data, nil
 }
