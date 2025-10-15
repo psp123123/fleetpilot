@@ -14,20 +14,10 @@ var (
 
 // Config 结构体对应 config.yaml
 type Config struct {
-	Log   LogConfig
-	Mysql MysqlConfig
-}
-
-// logger 相关配置内容
-type LogConfig struct {
-	Logger struct {
+	Log struct {
 		Level string `yaml:"level"`
 	} `yaml:"log"`
-}
-
-// mysql相关配置内容
-type MysqlConfig struct {
-	Mysqler struct {
+	Mysql struct {
 		Address         string `yaml:"address"`
 		Username        string `yaml:"username"`
 		Password        string `yaml:"password"`
@@ -60,7 +50,7 @@ func LoadConfig(path string) (*Config, error) {
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return nil, fmt.Errorf("解析配置文件失败: %v", err)
 	}
-	GlobalCfg = &cfg
+
 	return &cfg, nil
 }
 

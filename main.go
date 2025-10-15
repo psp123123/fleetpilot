@@ -20,13 +20,13 @@ func main() {
 	}
 
 	// 2️. 加载配置
-	_, err := config.LoadConfig(configPath)
+	cfg, err := config.LoadConfig(configPath)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-
-	logger.InitLogger(config.GlobalCfg.Log.Logger.Level, nil)
+	config.GlobalCfg = cfg
+	logger.InitLogger(config.GlobalCfg.Log.Level, nil)
 
 	// 3. 配置路由
 

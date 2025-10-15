@@ -15,7 +15,7 @@ import (
 
 // 初始化mysql
 func InitDB() (*gorm.DB, error) {
-	m := config.GlobalCfg.Mysql.Mysqler
+	m := config.GlobalCfg.Mysql
 
 	// 拼接连接信息
 	dsn := fmt.Sprintf(
