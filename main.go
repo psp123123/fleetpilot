@@ -29,16 +29,21 @@ func main() {
 	logger.InitLogger(config.GlobalCfg.Log.Level, nil)
 	fmt.Printf("Loaded config: %+v\n", config.GlobalCfg)
 
-	// 3. 配置路由
-
 	router := gin.Default()
-	user := router.Group("/user")
-	{
-		user.GET("/", usermanager.User)
-		user.POST("/registry", usermanager.CreateUser)
-	}
-	router.POST("/login", usermanager.Login)
 
+	// 受保护的路由，需要 Access Token
+	auth := router.Group("/api").Use(usermanager.AuthMiddleware())
+	{
+		// 校验用户信息，并生成token
+		auth.POST("/", usermanager.User)
+	}
+
+	// 公共路由
+	router.POST("/login", usermanager.Login)
+	router.POST("/registry", usermanager.CreateUser)
+
+	// 刷新路由
+	router.POST("/token/refresh")
 	// 启动服务
 	router.Run("0.0.0.0:8000")
 }

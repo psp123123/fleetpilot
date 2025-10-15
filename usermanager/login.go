@@ -52,7 +52,7 @@ func Login(ctx *gin.Context) {
 		if err != nil {
 			logger.Error("genera refresh token error:%v", err)
 		}
-		logger.Info("get data:%v", retUsername)
+		logger.Debug("get data:%v", retUsername)
 
 		ctx.JSON(http.StatusOK, gin.H{
 			"code": 200,
