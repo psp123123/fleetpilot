@@ -29,7 +29,7 @@ func GenerateAccessToken(userID string, username string) (string, error) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
-	return token.SignedString(config.GlobalCfg.Jwt.AccessSecret)
+	return token.SignedString([]byte(config.GlobalCfg.Jwt.AccessSecret))
 }
 
 // refreshToken
@@ -43,7 +43,7 @@ func GenerateRefreshoken(userID string, username string) (string, error) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
-	return token.SignedString(config.GlobalCfg.Jwt.RefreshSecret)
+	return token.SignedString([]byte(config.GlobalCfg.Jwt.RefreshSecret))
 }
 
 // 验证token
