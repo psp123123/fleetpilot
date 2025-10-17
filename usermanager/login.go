@@ -65,14 +65,14 @@ func Login(ctx *gin.Context) {
 			true,
 		)
 
-		logger.Debug("get data:%v", retUsername)
+		logger.Debug("get data:%v", retUsername.UserID)
 
 		ctx.JSON(http.StatusOK, gin.H{
 			"code": 200,
 
 			"data": gin.H{
 				"accessToken": accessToken,
-				"usr":         retUsername.UserID,
+				"user":        retUsername.UserID,
 			},
 			"message": "ok",
 		})
