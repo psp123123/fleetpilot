@@ -66,13 +66,13 @@ func GetMysqlOneData(queryTable string, conDiction map[string]interface{}) (*Use
 		return nil, result.Error
 	}
 
-	logger.Debug("get user info ,userID column is %v", user.Phone)
+	logger.Debug("get user info ,userID column is %v", user.UserID)
 	return &user, nil
 }
 
 type User struct {
 	ID           int64     `gorm:"primaryKey;autoIncrement;comment:主键ID" json:"id"`
-	UserID       string    `gorm:"type:char(32);not null;comment:用户唯一ID" json:"userID"`
+	UserID       string    `gorm:"column:userID;type:char(32);not null;comment:用户唯一ID" json:"userID"`
 	Username     string    `gorm:"type:varchar(50);not null;unique;comment:用户名" json:"username"`
 	PasswordHash string    `gorm:"type:varchar(255);not null;comment:密码哈希" json:"password_hash"`
 	Email        string    `gorm:"type:varchar(100);not null;unique;comment:邮箱" json:"email"`
