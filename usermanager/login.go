@@ -4,6 +4,7 @@ import (
 	"fleetpilot/backend"
 	"fleetpilot/common/logger"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,14 +53,26 @@ func Login(ctx *gin.Context) {
 		if err != nil {
 			logger.Error("genera refresh token error:%v", err)
 		}
+
+		// 设置HttpOnly Cookie存放refresh token
+		ctx.SetCookie(
+			"refreshToken",
+			refreshToken,
+			int(7*24*time.Hour.Seconds()),
+			"/token/refresh",
+			"",
+			false,
+			true,
+		)
+
 		logger.Debug("get data:%v", retUsername)
 
 		ctx.JSON(http.StatusOK, gin.H{
 			"code": 200,
 
 			"data": gin.H{
-				"accessToken":  accessToken,
-				"refreshToken": refreshToken,
+				"accessToken": accessToken,
+				"usr":         retUsername.UserID,
 			},
 			"message": "ok",
 		})
