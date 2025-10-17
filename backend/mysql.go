@@ -66,6 +66,7 @@ func GetMysqlOneData(queryTable string, conDiction map[string]interface{}) (*Use
 		return nil, result.Error
 	}
 
+	logger.Debug("get user info ,userID column is %v", user.UserID)
 	return &user, nil
 }
 
