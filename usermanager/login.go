@@ -30,8 +30,8 @@ func Login(ctx *gin.Context) {
 	// 密码字符转换
 	passBcrypt := EncodeBcrypt(logininfo.Password)
 	cond := map[string]interface{}{
-		"username": logininfo.Username,
-		"password": passBcrypt,
+		"username":      logininfo.Username,
+		"password_hash": passBcrypt,
 	}
 	logger.Debug("get client info user:%v", cond["username"])
 
