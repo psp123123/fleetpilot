@@ -75,6 +75,9 @@ func Login(ctx *gin.Context) {
 			"data": gin.H{
 				"accessToken": accessToken,
 				"user":        retUsername.UserID,
+				"username":    retUsername.Username,
+				"userID":      retUsername.UserID,
+				"nickname":    retUsername.Nickname,
 			},
 			"message": "ok",
 		})
