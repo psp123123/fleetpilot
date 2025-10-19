@@ -43,7 +43,7 @@ func main() {
 	router.POST("/registry", usermanager.CreateUser)
 
 	// -- 刷新路由
-	router.POST("/token/refresh")
+	router.POST("/token/refresh", usermanager.RefreshHanlder)
 
 	// 启动服务
 	router.Run("0.0.0.0:8000")

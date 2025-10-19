@@ -27,8 +27,11 @@ func Login(ctx *gin.Context) {
 		})
 	}
 
+	// 密码字符转换
+	passBcrypt := EncodeBcrypt(logininfo.Password)
 	cond := map[string]interface{}{
 		"username": logininfo.Username,
+		"password": passBcrypt,
 	}
 	logger.Debug("get client info user:%v", cond["username"])
 
@@ -77,4 +80,49 @@ func Login(ctx *gin.Context) {
 			"message": "ok",
 		})
 	}
+}
+
+// 刷新接口
+func RefreshHanlder(ctx *gin.Context) {
+	// 从cookie中读取refresh token
+	refreshtoken, err := ctx.Cookie("refreshToken")
+	if err != nil {
+		logger.Error("get refreshtoken from client cookie error:%v", err)
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "authorized error"})
+		return
+	}
+
+	// 验证refreshtoken
+	claims, err := VerifyRefreshToken(refreshtoken)
+	if err != nil {
+		logger.Error("get refreshtoken from client cookie error:%v", err)
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "authorized error"})
+		return
+	}
+
+	// 验证refresh无问题，重新生成
+	newRefreshToken, err := GenerateRefreshoken(claims.UserID, claims.Username)
+	if err != nil {
+		logger.Error("general new refresh token failed")
+	}
+	newAccessToken, err := GenerateAccessToken(claims.UserID, claims.Username)
+	if err != nil {
+		logger.Error("genera access token error:%v", err)
+	}
+
+	// 下发新的refreshtoken
+	ctx.SetCookie(
+		"refreshToken",
+		newRefreshToken,
+		int(7*24*time.Hour.Seconds()),
+		"/auth/refresh",
+		"",
+		true,
+		true,
+	)
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"accessToken": newAccessToken,
+	})
+
 }
