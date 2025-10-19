@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
@@ -47,4 +48,14 @@ func main() {
 
 	// 启动服务
 	router.Run("0.0.0.0:8000")
+
+	password := "admin123"
+	hash := "$2a$10$V1QkUuFHzGwlzP4XoQ3H1O5GqDg8Tb7RQOkBxMZfJdUqv7Wf5v9bi"
+
+	err = bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	if err != nil {
+		fmt.Println("密码不匹配:", err)
+	} else {
+		fmt.Println("登录成功")
+	}
 }
