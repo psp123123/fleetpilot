@@ -27,11 +27,10 @@ func Login(ctx *gin.Context) {
 		})
 	}
 
-	// 密码字符转换
-	passBcrypt := EncodeBcrypt(logininfo.Password)
+	//
 	cond := map[string]interface{}{
-		"username":      logininfo.Username,
-		"password_hash": passBcrypt,
+		"username": logininfo.Username,
+		//"password_hash": logininfo.Password,
 	}
 	logger.Debug("get client info user:%v", cond["username"])
 
@@ -39,7 +38,7 @@ func Login(ctx *gin.Context) {
 	retUsername, retErr := backend.GetMysqlOneData("user", cond)
 	logger.Debug("get info from mysql user info:%v", retUsername)
 
-	if retErr != nil || len(retUsername.Username) == 0 {
+	if retErr != nil || len(retUsername.Username) == 0 || !ComparePass(retUsername.PasswordHash, logininfo.Password) {
 		logger.Error("查询用户失败")
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"code":    401,
