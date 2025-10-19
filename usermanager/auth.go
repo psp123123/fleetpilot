@@ -8,11 +8,12 @@ import (
 )
 
 // 比对验证密码
-func ComparePass(sourcepass, verifypass string) bool {
-	logger.Debug("sourcePass is %v,verifypass is %v", sourcepass, verifypass)
-	err := bcrypt.CompareHashAndPassword([]byte(sourcepass), []byte(verifypass))
+func ComparePass(hashedPassword, inputPassword string) bool {
+	logger.Debug("hashedPassword: %v, inputPassword: %v", hashedPassword, inputPassword)
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(inputPassword))
 	if err != nil {
-		logger.Error("compare password error:%v", err)
+		logger.Error("compare password error: %v", err)
+		return false
 	}
-	return err == nil
+	return true
 }

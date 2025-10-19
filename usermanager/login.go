@@ -36,7 +36,7 @@ func Login(ctx *gin.Context) {
 
 	// 获取数据库信息
 	retUsername, retErr := backend.GetMysqlOneData("user", cond)
-	logger.Debug("get info from mysql user info:%v", retUsername)
+	logger.Debug("get info from mysql users password length:%v,value is %v", len(retUsername.PasswordHash), retUsername.PasswordHash)
 
 	if retErr != nil || len(retUsername.Username) == 0 || !ComparePass(retUsername.PasswordHash, logininfo.Password) {
 		logger.Error("查询用户失败")
