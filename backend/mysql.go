@@ -81,6 +81,7 @@ type User struct {
 	Status       int8      `gorm:"type:tinyint(4);default:1;index;comment:状态(1=启用,0=禁用)" json:"status"`
 	Role         string    `gorm:"type:varchar(30);default:'user';comment:角色" json:"role"`
 	CreatedAt    time.Time `gorm:"type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"created_at"`
+	Avatar       string    `gorm:"type:varchar(255)" json:"avatar"`
 	UpdatedAt    time.Time `gorm:"type:datetime;default:CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP;comment:更新时间" json:"updated_at"`
 }
 
