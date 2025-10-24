@@ -1,11 +1,10 @@
 package usermanager
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
-// 获取用户的接口
-func User(ctx *gin.Context) {
-
-}
+	"github.com/gin-gonic/gin"
+)
 
 // 创建用户接口
 func CreateUser(ctx *gin.Context) {
@@ -31,4 +30,23 @@ func AuthMiddleware() gin.HandlerFunc {
 		c.Set("userID", claims.UserID)
 		c.Next()
 	}
+}
+
+// 获取用户信息，根据客户端传来的access token认证
+func GETUserINFO(ctx *gin.Context) {
+	accessToken := ctx.GetHeader("Authorization")
+
+	// 验证token
+	claims, err := VerifyAccessToken(accessToken)
+	if err != nil {
+		ctx.JSON(401, gin.H{"msg": "invalid or expired token"})
+		ctx.Abort()
+		return
+	}
+
+	// 返回用户信息
+	userName := claims.Username
+	ctx.JSON(http.StatusOK, gin.H{
+		"user": userName,
+	})
 }

@@ -35,7 +35,7 @@ func main() {
 	auth := router.Group("/api").Use(usermanager.AuthMiddleware())
 	{
 		// 校验用户信息，并生成token
-		auth.POST("/", usermanager.User)
+		auth.GET("/userinfo", usermanager.GETUserINFO)
 	}
 
 	// -- 公共路由
