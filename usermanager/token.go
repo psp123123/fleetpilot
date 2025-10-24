@@ -3,6 +3,7 @@ package usermanager
 
 import (
 	"errors"
+	"fleetpilot/backend"
 	"fleetpilot/common/config"
 	"fleetpilot/common/logger"
 	"time"
@@ -29,7 +30,19 @@ func GenerateAccessToken(userID string, username string) (string, error) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(config.GlobalCfg.Jwt.AccessSecret))
+	tokenStr, err := token.SignedString([]byte(config.GlobalCfg.Jwt.AccessSecret))
+	if err != nil {
+		logger.Error("access Token error: ", err)
+		return "", err
+	}
+	// 生成token写入redis
+	err = backend.RedisSet("accessToken", tokenStr, 900)
+	if err != nil {
+		logger.Error("Set AccessToken error: ", err)
+		return "", err
+	}
+
+	return tokenStr, nil
 }
 
 // refreshToken
@@ -47,12 +60,18 @@ func GenerateRefreshoken(userID string, username string) (string, error) {
 }
 
 // 验证token
-// 验证accessToken
+// 验证accessToken，成功后返回解密信息
 func VerifyAccessToken(tokenStr string) (*Claims, error) {
+	// 验证token是否在redis中
+	AccessTokenFromRedis, err := backend.RedisGet(tokenStr)
+	if err != nil {
+		logger.Error("get token from redis expiration error: ", err)
+	}
+
 	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return config.GlobalCfg.Jwt.AccessSecret, nil
 	})
-	if err != nil {
+	if err != nil || AccessTokenFromRedis != tokenStr {
 		return nil, err
 	}
 

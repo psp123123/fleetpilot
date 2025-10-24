@@ -36,7 +36,6 @@ func AuthMiddleware() gin.HandlerFunc {
 func GETUserINFO(ctx *gin.Context) {
 	accessToken := ctx.GetHeader("Authorization")
 
-	// 验证token
 	claims, err := VerifyAccessToken(accessToken)
 	if err != nil {
 		ctx.JSON(401, gin.H{"msg": "invalid or expired token"})
@@ -45,8 +44,7 @@ func GETUserINFO(ctx *gin.Context) {
 	}
 
 	// 返回用户信息
-	userName := claims.Username
 	ctx.JSON(http.StatusOK, gin.H{
-		"user": userName,
+		"user": claims.Username,
 	})
 }

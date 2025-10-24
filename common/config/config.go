@@ -33,6 +33,11 @@ type Config struct {
 		RefreshExp    time.Duration `yaml:"refreshExp"`
 		IssuedAt      string        `yaml:"issuedAt"`
 	} `yaml:"jwt"`
+	Redis struct {
+		Address  string `yaml:"address"`
+		Password string `yaml:"password"`
+		Db       int    `yaml:"db"`
+	}
 }
 
 // ensureConfigExists 检查并初始化配置文件

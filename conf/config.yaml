@@ -17,3 +17,9 @@ jwt:
   accessExp: 15m
   refreshExp: 168h
   issuedAt: 'abcd'
+
+# redis配置
+redis:
+  address: '192.168.56.11:6379'
+  password: ''
+  db: 0
