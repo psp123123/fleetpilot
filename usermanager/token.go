@@ -76,7 +76,7 @@ func VerifyAccessToken(tokenStr string) (*Claims, error) {
 	}
 
 	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return config.GlobalCfg.Jwt.AccessSecret, nil
+		return []byte(config.GlobalCfg.Jwt.AccessSecret), nil
 	})
 	if err != nil || AccessTokenFromRedis != tokenStr {
 		return nil, err
