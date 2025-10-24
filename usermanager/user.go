@@ -15,6 +15,7 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("Authorization")
 		if token == "" {
+			logger.Error("get client token is null")
 			c.JSON(401, gin.H{"msg": "missing token"})
 			c.Abort()
 			return
@@ -22,6 +23,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		claims, err := VerifyAccessToken(token)
 		if err != nil {
+			logger.Error("接口守卫验证失败: %v", err)
 			c.JSON(401, gin.H{"msg": "invalid or expired token"})
 			c.Abort()
 			return
