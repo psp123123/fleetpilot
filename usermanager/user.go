@@ -1,6 +1,7 @@
 package usermanager
 
 import (
+	"fleetpilot/common/logger"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,11 +34,12 @@ func AuthMiddleware() gin.HandlerFunc {
 }
 
 // 获取用户信息，根据客户端传来的access token认证
-func GETUserINFO(ctx *gin.Context) {
+func GetUserInfo(ctx *gin.Context) {
 	accessToken := ctx.GetHeader("Authorization")
 
 	claims, err := VerifyAccessToken(accessToken)
 	if err != nil {
+		logger.Error("verify token error: ", err)
 		ctx.JSON(401, gin.H{"msg": "invalid or expired token"})
 		ctx.Abort()
 		return
