@@ -63,6 +63,7 @@ func GenerateRefreshoken(userID string, username string) (string, error) {
 // 验证token
 // 验证accessToken，成功后返回解密信息
 func VerifyAccessToken(tokenStr string) (*Claims, error) {
+	logger.Debug("get client token is %v", tokenStr)
 	// 验证token是否在redis中
 	AccessTokenFromRedis, err := backend.RedisGet("accessToken")
 	if err != nil {
