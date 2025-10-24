@@ -37,6 +37,7 @@ func GenerateAccessToken(userID string, username string) (string, error) {
 	}
 	// 生成token写入redis
 	err = backend.RedisSet("accessToken", tokenStr, 900)
+
 	if err != nil {
 		logger.Error("Set AccessToken error: ", err)
 		return "", err
@@ -63,7 +64,7 @@ func GenerateRefreshoken(userID string, username string) (string, error) {
 // 验证accessToken，成功后返回解密信息
 func VerifyAccessToken(tokenStr string) (*Claims, error) {
 	// 验证token是否在redis中
-	AccessTokenFromRedis, err := backend.RedisGet(tokenStr)
+	AccessTokenFromRedis, err := backend.RedisGet("accessToken")
 	if err != nil {
 		logger.Error("get token from redis expiration error: ", err)
 	}
