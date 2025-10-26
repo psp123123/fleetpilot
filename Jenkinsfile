@@ -1,0 +1,2 @@
+@Library("shareLibrary") _
+standardPipeline()
