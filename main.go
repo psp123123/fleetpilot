@@ -42,7 +42,7 @@ func main() {
 	router.POST("/login", usermanager.Login)
 	router.POST("/registry", usermanager.CreateUser)
 
-	// -- 刷新路由
+	// -- 刷新 路由
 	router.POST("/token/refresh", usermanager.RefreshHanlder)
 
 	// 启动服务
