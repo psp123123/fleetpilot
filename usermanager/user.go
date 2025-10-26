@@ -30,7 +30,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		// token合法，设置用户信息到context
-		logger.Debug("claims.UserID: %v", claims.UserID)
+		//logger.Debug("claims.UserID: %v", claims.UserID)
 		c.Set("userID", claims.UserID)
 		c.Next()
 	}
