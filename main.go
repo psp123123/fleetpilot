@@ -45,7 +45,7 @@ func main() {
 	// -- 刷新 路由
 	router.POST("/token/refresh", usermanager.RefreshHanlder)
 
-	// 启动服务
+	// 启动 服务
 	router.Run("0.0.0.0:8000")
 
 }
