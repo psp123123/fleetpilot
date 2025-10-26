@@ -38,7 +38,7 @@ func main() {
 		auth.GET("/userinfo", usermanager.GetUserInfo)
 	}
 
-	// -- 公共路由
+	// -- 公共 路由
 	router.POST("/login", usermanager.Login)
 	router.POST("/registry", usermanager.CreateUser)
 
