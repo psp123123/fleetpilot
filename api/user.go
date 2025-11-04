@@ -54,6 +54,6 @@ func GetUserInfo(ctx *gin.Context) {
 
 	// 返回用户信息
 	ctx.JSON(http.StatusOK, gin.H{
-		"user": claims.Username,
+		"username": claims.Username,
 	})
 }
