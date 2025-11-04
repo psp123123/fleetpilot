@@ -28,13 +28,13 @@ func WsHandler(ctx *gin.Context) {
 	for {
 		mt, message, err := c.ReadMessage()
 		if err != nil {
-			logger.Debug("read:", err)
+			logger.Debug("read:%v", err)
 			break
 		}
 		logger.Debug("recv: %s", message)
 		err = c.WriteMessage(mt, message)
 		if err != nil {
-			logger.Error("write:", err)
+			logger.Error("write:%v", err)
 			break
 		}
 	}
