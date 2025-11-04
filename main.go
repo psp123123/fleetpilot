@@ -1,10 +1,9 @@
 package main
 
 import (
+	api "fleetpilot/api"
 	"fleetpilot/common/config"
 	"fleetpilot/common/logger"
-	"fleetpilot/usermanager"
-
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -32,18 +31,21 @@ func main() {
 	router := gin.Default()
 
 	// -- 受保护的路由，需要 Access Token
-	auth := router.Group("/api").Use(usermanager.AuthMiddleware())
+	auth := router.Group("/api").Use(api.AuthMiddleware())
 	{
 		// 校验用户信息，并生成token
-		auth.GET("/userinfo", usermanager.GetUserInfo)
+		auth.GET("/userinfo", api.GetUserInfo)
+
+		// 处理ws消息请求
+		auth.GET("/ws", api.WsHandler)
 	}
 
 	// -- 公共 路由
-	router.POST("/login", usermanager.Login)
-	router.POST("/registry", usermanager.CreateUser)
+	router.POST("/login", api.Login)
+	router.POST("/registry", api.CreateUser)
 
 	// -- 刷新 路由
-	router.POST("/token/refresh", usermanager.RefreshHanlder)
+	router.POST("/token/refresh", api.RefreshHanlder)
 
 	// 启动 服务
 	router.Run("0.0.0.0:8000")

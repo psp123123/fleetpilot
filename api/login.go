@@ -1,8 +1,9 @@
-package usermanager
+package api
 
 import (
 	"fleetpilot/backend"
 	"fleetpilot/common/logger"
+	utils "fleetpilot/utils"
 	"net/http"
 	"time"
 
@@ -38,7 +39,7 @@ func Login(ctx *gin.Context) {
 	retUsername, retErr := backend.GetMysqlOneData("user", cond)
 	logger.Debug("get info from mysql users password length:%v,value is %v", len(retUsername.PasswordHash), retUsername.PasswordHash)
 
-	if retErr != nil || len(retUsername.Username) == 0 || !ComparePass(retUsername.PasswordHash, logininfo.Password) {
+	if retErr != nil || len(retUsername.Username) == 0 || !utils.ComparePass(retUsername.PasswordHash, logininfo.Password) {
 		logger.Error("查询用户失败")
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"code":    401,
@@ -47,11 +48,11 @@ func Login(ctx *gin.Context) {
 		})
 	} else {
 		// 生成token
-		accessToken, err := GenerateAccessToken(retUsername.UserID, retUsername.Username)
+		accessToken, err := utils.GenerateAccessToken(retUsername.UserID, retUsername.Username)
 		if err != nil {
 			logger.Error("genera access token error:%v", err)
 		}
-		refreshToken, err := GenerateRefreshoken(retUsername.UserID, retUsername.Username)
+		refreshToken, err := utils.GenerateRefreshoken(retUsername.UserID, retUsername.Username)
 		if err != nil {
 			logger.Error("genera refresh token error:%v", err)
 		}
@@ -96,7 +97,7 @@ func RefreshHanlder(ctx *gin.Context) {
 	}
 
 	// 验证refreshtoken
-	claims, err := VerifyRefreshToken(refreshtoken)
+	claims, err := utils.VerifyRefreshToken(refreshtoken)
 	if err != nil {
 		logger.Error("get refreshtoken from client cookie error:%v", err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "authorized error"})
@@ -104,11 +105,11 @@ func RefreshHanlder(ctx *gin.Context) {
 	}
 
 	// 验证refresh无问题，重新生成
-	newRefreshToken, err := GenerateRefreshoken(claims.UserID, claims.Username)
+	newRefreshToken, err := utils.GenerateRefreshoken(claims.UserID, claims.Username)
 	if err != nil {
 		logger.Error("general new refresh token failed")
 	}
-	newAccessToken, err := GenerateAccessToken(claims.UserID, claims.Username)
+	newAccessToken, err := utils.GenerateAccessToken(claims.UserID, claims.Username)
 	if err != nil {
 		logger.Error("genera access token error:%v", err)
 	}

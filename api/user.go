@@ -1,7 +1,8 @@
-package usermanager
+package api
 
 import (
 	"fleetpilot/common/logger"
+	utils "fleetpilot/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,13 +16,16 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("Authorization")
 		if token == "" {
+			token = c.Query("token")
+		}
+		if token == "" {
 			logger.Error("get client token is null")
 			c.JSON(401, gin.H{"msg": "missing token"})
 			c.Abort()
 			return
 		}
 
-		claims, err := VerifyAccessToken(token)
+		claims, err := utils.VerifyAccessToken(token)
 		if err != nil {
 			logger.Error("接口守卫验证失败: %v", err)
 			c.JSON(401, gin.H{"msg": "invalid or expired token"})
@@ -40,7 +44,7 @@ func AuthMiddleware() gin.HandlerFunc {
 func GetUserInfo(ctx *gin.Context) {
 	accessToken := ctx.GetHeader("Authorization")
 	logger.Debug("get client token is: %v", accessToken)
-	claims, err := VerifyAccessToken(accessToken)
+	claims, err := utils.VerifyAccessToken(accessToken)
 	if err != nil {
 		logger.Error("verify token error: ", err)
 		ctx.JSON(401, gin.H{"msg": "invalid or expired token"})
