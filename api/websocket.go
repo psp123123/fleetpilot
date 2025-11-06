@@ -32,7 +32,8 @@ func WsHandler(ctx *gin.Context) {
 			break
 		}
 		logger.Debug("recv: %s", message)
-		err = c.WriteMessage(mt, message)
+		msg := `{"type":"chat","payload":"{\"host\":\"123\",\"scanType\":\"-sS\"}"}`
+		err = c.WriteMessage(mt, []byte(msg))
 		if err != nil {
 			logger.Error("write:%v", err)
 			break
