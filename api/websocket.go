@@ -3,6 +3,7 @@ package api
 import (
 	"fleetpilot/common/logger"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -38,5 +39,6 @@ func WsHandler(ctx *gin.Context) {
 			logger.Error("write:%v", err)
 			break
 		}
+		time.Sleep(1 * time.Second)
 	}
 }
