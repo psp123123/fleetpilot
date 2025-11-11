@@ -28,24 +28,9 @@ func GetHandlerManager() *HandlerManager {
 			handlers: toolMap,
 		}
 	})
+	logger.Debug("注册的信息：%v", manager)
 	return manager
 }
-
-// // 注册工具处理器
-// func (h *HandlerManager) Register(handler ToolHandler) error {
-// 	h.mutex.Lock()
-// 	defer h.mutex.Unlock()
-
-// 	name := handler.GetToolName()
-// 	if _, exists := h.handlers[name]; exists {
-// 		logger.Error("工具 '%s' 的处理器已注册", name)
-// 		return fmt.Errorf("工具 '%s' 的处理器已注册", name)
-
-// 	}
-
-// 	h.handlers[name] = handler
-// 	return nil
-// }
 
 // 根据工具名称获取处理器
 func (h *HandlerManager) GetHandler(toolName string) (ToolHandler, bool) {
