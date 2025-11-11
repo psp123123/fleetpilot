@@ -17,8 +17,8 @@ import (
 type NmapClientParams struct {
 	MsgType    string     `json:"type"`
 	MsgPayload MsgPayload `json:"payload"`
-	MsgExtra1  string     `json:"extra1"`
-	MsgExtra2  string     `json:"extra2"`
+	MsgExtra1  string     `json:"extend1"`
+	MsgExtra2  string     `json:"extend2"`
 }
 type MsgPayload struct {
 	Target        string `json:"target"`
