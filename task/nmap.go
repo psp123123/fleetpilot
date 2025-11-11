@@ -63,7 +63,7 @@ func (n *NmapTool) Executed(conn *websocket.Conn, msg []byte) error {
 		return errors.New("target host empty")
 	}
 
-	cmd := exec.CommandContext(context.Background(), "nmap", p.Host, p.Host)
+	cmd := exec.CommandContext(context.Background(), "nmap", p.ScanType, p.Host)
 
 	stdout, _ := cmd.StdoutPipe()
 	stderr, _ := cmd.StderrPipe()
