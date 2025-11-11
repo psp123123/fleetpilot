@@ -1,8 +1,10 @@
 package task
 
 import (
+	"bufio"
 	"context"
 	"errors"
+	"fleetpilot/api"
 	"fmt"
 	"net"
 	"os/exec"
@@ -10,7 +12,6 @@ import (
 	"time"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/gorilla/websocket"
 )
 
 // 解析ws消息内容
@@ -24,6 +25,11 @@ type MsgPayload struct {
 	Target        string `json:"target"`
 	ScanParams    string `json:"scanParams"`
 	PayloadExtra1 string `json:"extra1"`
+}
+
+// 自动注册
+func init() {
+	api.RegisterTool(&NmapClientParams{})
 }
 
 // 迁就执行器接口
@@ -50,21 +56,58 @@ func (n *NmapClientParams) PreCheck() error {
 	return nil
 }
 
-func (n *NmapClientParams) Executed(conn *websocket.Conn, msg []byte) (interface{}, error) {
+func (n *NmapClientParams) Executed(writer api.WsWriter, msg []byte) error {
 
-	// 构建命令参数
-	cmdArgs := []string{}
-	cmdArgs = append(cmdArgs, n.MsgPayload.ScanParams, n.MsgPayload.Target)
+	if err := n.PreCheck(); err != nil {
+		return err
+	}
 
-	// 创建带上下文的命令
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	args := strings.Fields(n.MsgPayload.ScanParams)
+	args = append(args, n.MsgPayload.Target)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
-	cmd := exec.CommandContext(ctx, "nmap", cmdArgs...)
-	output, err := cmd.CombinedOutput()
+	cmd := exec.CommandContext(ctx, "nmap", args...)
 
-	if ctx.Err() == context.DeadlineExceeded {
-		return "", fmt.Errorf("nmap scan timeout")
+	stdout, _ := cmd.StdoutPipe()
+	stderr, _ := cmd.StderrPipe()
+
+	if err := cmd.Start(); err != nil {
+		return err
 	}
-	return string(output), err
+
+	sendLine := func(stream, line string) {
+		data := map[string]string{
+			"stream": stream,
+			"line":   line,
+		}
+		writer.WriteJSON(data)
+	}
+
+	go func() {
+		scanner := bufio.NewScanner(stdout)
+		for scanner.Scan() {
+			sendLine("stdout", scanner.Text())
+		}
+	}()
+
+	go func() {
+		scanner := bufio.NewScanner(stderr)
+		for scanner.Scan() {
+			sendLine("stderr", scanner.Text())
+		}
+	}()
+
+	if err := cmd.Wait(); err != nil {
+		sendLine("stderr", fmt.Sprintf("error: %v", err))
+		return err
+	}
+
+	writer.WriteJSON(map[string]string{
+		"stream": "stdout",
+		"line":   "scan done",
+	})
+
+	return nil
 }

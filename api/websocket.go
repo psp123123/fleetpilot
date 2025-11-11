@@ -2,6 +2,7 @@ package api
 
 // websocket业务工具分发程序
 import (
+	"encoding/json"
 	"fleetpilot/common/logger"
 	utils "fleetpilot/utils"
 	"net/http"
@@ -12,13 +13,6 @@ import (
 )
 
 var upgrader = websocket.Upgrader{}
-
-// 定义工具处理客户端传入URL处理过程的接口
-type ToolHandler interface {
-	// 获取工具名称，用户注册和路由
-	GetToolName() string
-	Executed(conn *websocket.Conn, msg []byte) (interface{}, error)
-}
 
 // 解析http协议携带的参数
 type ClientHttpStruct struct {
@@ -42,7 +36,7 @@ func WsHandler(ctx *gin.Context) {
 	var chs ClientHttpStruct
 
 	// 调用接收者方法绑定查询参数
-	if err := chs.ClientBindQuery(ctx); err != nil {
+	if err := ctx.ShouldBindQuery(&chs); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"timestamp": time.Now().UnixMilli(),
 			"msg":       "bad request" + err.Error(),
@@ -54,8 +48,7 @@ func WsHandler(ctx *gin.Context) {
 	logger.Debug("升级协议前获取参数toolname:%v", chs.ToolName)
 	// 验证用户信息
 	// user := cw.UserName
-	accessToken := chs.Token
-	claims, err := utils.VerifyAccessToken(accessToken)
+	claims, err := utils.VerifyAccessToken(chs.Token)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"timestamp": time.Now().UnixMilli(),
@@ -94,6 +87,7 @@ func WsHandler(ctx *gin.Context) {
 	defer c.Close()
 
 	// 接受客户端消息参数，并启用协程处理，并时刻返回
+	writer := NewWsWriter(c)
 	for {
 		_, msgBytes, err := c.ReadMessage()
 		if err != nil {
@@ -102,6 +96,15 @@ func WsHandler(ctx *gin.Context) {
 		}
 
 		logger.Debug("get client ws message is %s", string(msgBytes))
+
+		handlerType := handler.GetToolName()
+		tool, _ := manager.GetHandler(handlerType)
+
+		// 自动JSON反序列化
+		json.Unmarshal(msgBytes, tool)
+		if err := tool.Executed(writer, msgBytes); err != nil {
+			writer.WriteJSON(map[string]string{"error": err.Error()})
+		}
 	}
 
 }
