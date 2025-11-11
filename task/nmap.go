@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/asaskevich/govalidator"
+	"github.com/gorilla/websocket"
 )
 
 // 解析ws消息内容
@@ -49,7 +50,7 @@ func (n *NmapClientParams) PreCheck() error {
 	return nil
 }
 
-func (n *NmapClientParams) Executed() (string, error) {
+func (n *NmapClientParams) Executed(conn *websocket.Conn, msg []byte) (interface{}, error) {
 
 	// 构建命令参数
 	cmdArgs := []string{}
