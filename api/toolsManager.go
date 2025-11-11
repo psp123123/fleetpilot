@@ -48,9 +48,10 @@ func (h *HandlerManager) Register(handler ToolHandler) error {
 // 根据工具名称获取处理器
 func (h *HandlerManager) GetHandler(toolName string) (ToolHandler, bool) {
 	h.mutex.RLock()
-	defer h.mutex.Unlock()
+	defer h.mutex.RUnlock()
 
 	handler, exsits := h.handlers[toolName]
+	logger.Debug("根据工具名称获取处理器-%v", handler)
 	return handler, exsits
 }
 
