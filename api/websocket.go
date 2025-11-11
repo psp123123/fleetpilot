@@ -70,7 +70,7 @@ func WsHandler(ctx *gin.Context) {
 		// 	"extra2":    gin.H{},
 		// })
 		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "unknown tool"})
-		logger.Debug("unknow tool")
+		logger.Error("unknow tool")
 		return
 	}
 	logger.Debug("get handler is %v", handler.GetToolName())
