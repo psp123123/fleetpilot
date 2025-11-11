@@ -65,7 +65,7 @@ func WsHandler(ctx *gin.Context) {
 		if err := handler.Executed(conn, msgBytes); err != nil {
 			logger.Error("执行报错:%v", err)
 			conn.WriteMessage(websocket.TextMessage, []byte("error: "+err.Error()))
-			break
+			//break
 		}
 	}
 }
