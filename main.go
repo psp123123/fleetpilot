@@ -17,7 +17,7 @@ func init() {
 		logger.Error("注册nmap工具失败", err)
 		os.Exit(1)
 	}
-	logger.Debug("获取工具注册器:%v", manager)
+	fmt.Printf("====获取工具注册器:%v", manager)
 }
 func main() {
 	const configPath = "conf/config.yaml"
