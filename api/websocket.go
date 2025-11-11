@@ -22,8 +22,8 @@ type ToolHandler interface {
 
 // 解析http协议携带的参数
 type ClientHttpStruct struct {
-	ToolName string `form:"tool_name"`
-	UserName string `form:"user_name"`
+	ToolName string `form:"tool"`
+	UserName string `form:"user"`
 	Token    string `form:"token"`
 }
 
@@ -66,7 +66,7 @@ func WsHandler(ctx *gin.Context) {
 	}
 	logger.Debug("get token's claims is %v", claims)
 
-	// 获取工具处理器
+	// 获取工具处理器GetHandlerManager
 	manager := GetHandlerManager()
 	_, exsit := manager.GetHandler(chs.ToolName)
 	if !exsit {
