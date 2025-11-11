@@ -19,11 +19,11 @@
 	"type":"string",
 	"payload":{
 		"host":"string",
-		"params1":"string",
-		"params2":"string"
+		"scanParams":"string",
+		"extra1":"string"
 	},
-	"extra1":"string",
-	"extra2":"string"
+	"extend1":"string",
+	"extend2":"string"
 }
 ```
 

@@ -70,7 +70,7 @@ func VerifyAccessToken(tokenStr string) (*Claims, error) {
 		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
 	}
 
-	logger.Debug("get client token is %v", tokenStr)
+	//logger.Debug("get client token is %v", tokenStr)
 	// 验证token是否在redis中
 	AccessTokenFromRedis, err := backend.RedisGet("accessToken")
 	if err != nil {

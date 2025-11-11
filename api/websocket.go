@@ -68,7 +68,7 @@ func WsHandler(ctx *gin.Context) {
 
 	// 获取工具处理器GetHandlerManager
 	manager := GetHandlerManager()
-	_, exsit := manager.GetHandler(chs.ToolName)
+	handler, exsit := manager.GetHandler(chs.ToolName)
 	if !exsit {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"timestamp": time.Now().UnixMilli(),
@@ -78,7 +78,7 @@ func WsHandler(ctx *gin.Context) {
 		})
 		return
 	}
-
+	logger.Debug("get handler is %v", handler.GetToolName())
 	// 升级协议
 	c, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
