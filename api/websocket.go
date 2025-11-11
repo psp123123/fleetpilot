@@ -63,15 +63,18 @@ func WsHandler(ctx *gin.Context) {
 	manager := GetHandlerManager()
 	handler, exsit := manager.GetHandler(chs.ToolName)
 	if !exsit {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"timestamp": time.Now().UnixMilli(),
-			"msg":       "Bad tool",
-			"extra1":    "",
-			"extra2":    gin.H{},
-		})
+		// ctx.JSON(http.StatusBadRequest, gin.H{
+		// 	"timestamp": time.Now().UnixMilli(),
+		// 	"msg":       "Bad tool",
+		// 	"extra1":    "",
+		// 	"extra2":    gin.H{},
+		// })
+		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "unknown tool"})
+		logger.Debug("unknow tool")
 		return
 	}
 	logger.Debug("get handler is %v", handler.GetToolName())
+
 	// 升级协议
 	c, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
