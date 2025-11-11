@@ -64,9 +64,11 @@ func GenerateRefreshoken(userID string, username string) (string, error) {
 // 验证token
 // 验证accessToken，成功后返回解密信息
 func VerifyAccessToken(tokenStr string) (*Claims, error) {
-	// 去掉 Bearer 前缀
-	tokenStr = strings.TrimSpace(tokenStr)
-	tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
+	// 判断token是否以 Bearer 为前缀，如果是则去掉
+	if strings.HasPrefix(tokenStr, "Bearer") {
+		tokenStr = strings.TrimSpace(tokenStr)
+		tokenStr = strings.TrimPrefix(tokenStr, "Bearer ")
+	}
 
 	logger.Debug("get client token is %v", tokenStr)
 	// 验证token是否在redis中

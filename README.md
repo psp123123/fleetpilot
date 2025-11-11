@@ -4,6 +4,29 @@
 
 ```
 
+## 数据结构
+```bash
+# ws服务端返回客户端的消息格式
+{
+	"timestamp":"",
+	"msg":"",
+	"extra1":"",
+	"extra2":{}
+}
+
+# 客户端发送消息
+{
+	"type":"string",
+	"payload":{
+		"host":"string",
+		"params1":"string",
+		"params2":"string"
+	},
+	"extra1":"string",
+	"extra2":"string"
+}
+```
+
 ## 一、推荐 Go 后端目录结构
 
 ```
