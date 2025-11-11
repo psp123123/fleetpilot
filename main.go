@@ -4,21 +4,11 @@ import (
 	api "fleetpilot/api"
 	"fleetpilot/common/config"
 	"fleetpilot/common/logger"
-	"fleetpilot/task"
 	"fmt"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
-func init() {
-	manager := api.GetHandlerManager()
-	if err := manager.Register(&task.NmapClientParams{}); err != nil {
-		logger.Error("注册nmap工具失败", err)
-		os.Exit(1)
-	}
-	fmt.Printf("====获取工具注册器:%v \n", manager)
-}
 func main() {
 	const configPath = "conf/config.yaml"
 

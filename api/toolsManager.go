@@ -2,7 +2,7 @@ package api
 
 import (
 	"fleetpilot/common/logger"
-	"fmt"
+	"fleetpilot/task"
 	"sync"
 )
 
@@ -22,28 +22,30 @@ var (
 // 初始化管理器
 func GetHandlerManager() *HandlerManager {
 	once.Do(func() {
+		toolMap := make(map[string]ToolHandler)
+		toolMap["nmap"] = &task.NmapClientParams{}
 		manager = &HandlerManager{
-			handlers: make(map[string]ToolHandler),
+			handlers: toolMap,
 		}
 	})
 	return manager
 }
 
-// 注册工具处理器
-func (h *HandlerManager) Register(handler ToolHandler) error {
-	h.mutex.Lock()
-	defer h.mutex.Unlock()
+// // 注册工具处理器
+// func (h *HandlerManager) Register(handler ToolHandler) error {
+// 	h.mutex.Lock()
+// 	defer h.mutex.Unlock()
 
-	name := handler.GetToolName()
-	if _, exists := h.handlers[name]; exists {
-		logger.Error("工具 '%s' 的处理器已注册", name)
-		return fmt.Errorf("工具 '%s' 的处理器已注册", name)
+// 	name := handler.GetToolName()
+// 	if _, exists := h.handlers[name]; exists {
+// 		logger.Error("工具 '%s' 的处理器已注册", name)
+// 		return fmt.Errorf("工具 '%s' 的处理器已注册", name)
 
-	}
+// 	}
 
-	h.handlers[name] = handler
-	return nil
-}
+// 	h.handlers[name] = handler
+// 	return nil
+// }
 
 // 根据工具名称获取处理器
 func (h *HandlerManager) GetHandler(toolName string) (ToolHandler, bool) {
