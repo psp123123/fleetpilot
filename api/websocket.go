@@ -51,7 +51,7 @@ func WsHandler(ctx *gin.Context) {
 		})
 		return
 	}
-	logger.Debug("升级协议前获取参数%v", chs)
+	logger.Debug("升级协议前获取参数toolname:%v", chs.ToolName)
 	// 验证用户信息
 	// user := cw.UserName
 	accessToken := chs.Token
