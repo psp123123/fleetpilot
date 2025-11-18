@@ -28,6 +28,7 @@
 }
 ```
 ### 2. url创建接口: /api/collection/urlcreate
+
 ```bash
 {
 	"url": "xxx.abc.com",
