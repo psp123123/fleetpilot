@@ -2,8 +2,10 @@ package main
 
 import (
 	api "fleetpilot/api"
+	"fleetpilot/backend"
 	"fleetpilot/common/config"
 	"fleetpilot/common/logger"
+	"fleetpilot/internal/collection"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +26,13 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+
+	// 3. 初始化配置
+	err = backend.InitDB()
+	if err != nil {
+		logger.Error("mysql init fatal %v", err)
+	}
+
 	config.GlobalCfg = cfg
 	logger.InitLogger(config.GlobalCfg.Log.Level, nil)
 	fmt.Printf("Loaded config: %+v\n", config.GlobalCfg)
@@ -31,13 +40,18 @@ func main() {
 	router := gin.Default()
 
 	// -- 受保护的路由，需要 Access Token
-	auth := router.Group("/api").Use(api.AuthMiddleware())
+	auth := router.Group("/api")
+	auth.Use(api.AuthMiddleware())
 	{
 		// 校验用户信息，并生成token
 		auth.GET("/userinfo", api.GetUserInfo)
 
 		// 处理ws消息请求
 		auth.GET("/ws", api.WsHandler)
+
+		// 业务Collection
+		collection := collection.NewCollectionHandler()
+		collection.RegisterRoutes(auth)
 	}
 
 	// -- 公共 路由

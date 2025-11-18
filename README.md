@@ -5,6 +5,7 @@
 ```
 
 ## 数据结构
+### 1.
 ```bash
 # ws服务端返回客户端的消息格式
 {
@@ -26,7 +27,16 @@
 	"extend2":"string"
 }
 ```
+### 2. url创建接口: /api/collection/urlcreate
+```bash
+{
+	"url": "xxx.abc.com",
+	"injectionType": 1,
+	"injectionPath": "/path1/path2?id=11"
+}
 
+
+```
 ## 一、推荐 Go 后端目录结构
 
 ```
