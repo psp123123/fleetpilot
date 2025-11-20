@@ -6,14 +6,15 @@ import (
 )
 
 type UrlInfo struct {
+	Date          string `json:"date" db:"updated_at" form:"date"`
 	Url           string `json:"url" db:"url" form:"url"`
 	InjectionType string `json:"injectionType" db:"injectionType" form:"injectionType"`
 	InjectionPath string `json:"injectionPath" db:"injectionPath" form:"injectionPath"`
 }
 
-func (c *UrlInfo) InsertData(url, injectionType, injectionPath string) error {
+func (c *UrlInfo) InsertData(date, url, injectionType, injectionPath string) error {
 	record := &UrlInfo{
-		url, injectionType, injectionPath,
+		date, url, injectionType, injectionPath,
 	}
 
 	ret := backend.DB.Create(record)
