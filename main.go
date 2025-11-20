@@ -30,7 +30,7 @@ func main() {
 	// 3. 初始化配置
 	err = backend.InitDB()
 	if err != nil {
-		logger.Error("mysql init fatal %v", err)
+		fmt.Printf("mysql init fatal %v", err)
 	}
 
 	config.GlobalCfg = cfg
