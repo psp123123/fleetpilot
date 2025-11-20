@@ -54,7 +54,7 @@ func (h *CollectionHandler) GetData(c *gin.Context) {
 		logger.Error("get data failed :%v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"data": urllist})
+		c.JSON(http.StatusOK, gin.H{"urllist": urllist})
 	}
 }
 
