@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm/schema"
 
 	"gorm.io/gorm"
 )
@@ -33,7 +34,11 @@ func InitDB() error {
 			m.Dbname,
 		)
 		var err error
-		DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+			NamingStrategy: schema.NamingStrategy{
+				SingularTable: true, // 使用单数表名，启用此选项，此时 `UrlInfo` 的表名会是 `url_info`
+			},
+		})
 		if err != nil {
 			logger.Error("init db error:", err)
 
