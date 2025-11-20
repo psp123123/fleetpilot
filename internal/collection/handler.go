@@ -11,7 +11,7 @@ import (
 type CollectionHandler struct{}
 
 func (h *CollectionHandler) RegisterRoutes(rg *gin.RouterGroup) {
-	logger.Error("----enter RegisterRoutes")
+	logger.Debug("----enter RegisterRoutes")
 	collection := rg.Group("/collection")
 	{
 		collection.POST("/urlcreate", h.InfoCreate)
@@ -23,7 +23,7 @@ func (h *CollectionHandler) RegisterRoutes(rg *gin.RouterGroup) {
 // 客户端信息写入mysql
 func (h *CollectionHandler) InfoCreate(c *gin.Context) {
 	// bind struct
-	var Info CollectionInfo
+	var Info UrlInfo
 	if err := c.ShouldBind(&Info); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
@@ -47,7 +47,7 @@ func (h *CollectionHandler) InfoCreate(c *gin.Context) {
 func (h *CollectionHandler) InfoPatch(c *gin.Context) {}
 
 func (h *CollectionHandler) GetData(c *gin.Context) {
-	var Info CollectionInfo
+	var Info UrlInfo
 	// response newest data to client
 	if err := Info.GetData(Info.Url); err != nil {
 		logger.Error("get data failed :%v", err)

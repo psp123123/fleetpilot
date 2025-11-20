@@ -5,14 +5,14 @@ import (
 	"fleetpilot/common/logger"
 )
 
-type CollectionInfo struct {
+type UrlInfo struct {
 	Url           string `json:"url" db:"url" form:"url"`
 	InjectionType string `json:"injectionType" db:"injectionType" form:"injectionType"`
 	InjectionPath string `json:"injectionPath" db:"injectionPath" form:"injectionPath"`
 }
 
-func (c *CollectionInfo) InsertData(url, injectionType, injectionPath string) error {
-	record := &CollectionInfo{
+func (c *UrlInfo) InsertData(url, injectionType, injectionPath string) error {
+	record := &UrlInfo{
 		url, injectionType, injectionPath,
 	}
 
@@ -24,7 +24,7 @@ func (c *CollectionInfo) InsertData(url, injectionType, injectionPath string) er
 }
 
 // get data from mysql
-func (c *CollectionInfo) GetData(url string) error {
+func (c *UrlInfo) GetData(url string) error {
 
 	ret := backend.DB.Where("url = ?", url).First(c)
 	if ret.Error != nil {
