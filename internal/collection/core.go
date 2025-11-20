@@ -33,6 +33,18 @@ func (c *UrlInfo) GetData(url string) error {
 	return nil
 }
 
+// get all data from mysql
+func (c *UrlInfo) GetAllData() ([]UrlInfo, error) {
+	var urlListData []UrlInfo
+	ret := backend.DB.Find(&urlListData)
+
+	if ret.Error != nil {
+		logger.Error("获取url列表失败:%v", ret.Error)
+		return nil, ret.Error
+	}
+	return urlListData, nil
+}
+
 // // 返回结构体
 // func GetCollectionStruct() *CollectionInfo {
 // 	return &CollectionInfo{}
