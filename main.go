@@ -27,15 +27,15 @@ func main() {
 		return
 	}
 
+	config.GlobalCfg = cfg
+	logger.InitLogger(config.GlobalCfg.Log.Level, nil)
+	fmt.Printf("Loaded config: %+v\n", config.GlobalCfg)
+
 	// 3. 初始化配置
 	err = backend.InitDB()
 	if err != nil {
 		fmt.Printf("mysql init fatal %v", err)
 	}
-
-	config.GlobalCfg = cfg
-	logger.InitLogger(config.GlobalCfg.Log.Level, nil)
-	fmt.Printf("Loaded config: %+v\n", config.GlobalCfg)
 
 	router := gin.Default()
 
