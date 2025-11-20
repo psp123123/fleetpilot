@@ -11,10 +11,12 @@ import (
 type CollectionHandler struct{}
 
 func (h *CollectionHandler) RegisterRoutes(rg *gin.RouterGroup) {
+	logger.Error("----enter RegisterRoutes")
 	collection := rg.Group("/collection")
 	{
 		collection.POST("/urlcreate", h.InfoCreate)
 		collection.PATCH("/urlpatch", h.InfoPatch)
+		collection.GET("/urlget", h.GetData)
 	}
 }
 
@@ -43,6 +45,17 @@ func (h *CollectionHandler) InfoCreate(c *gin.Context) {
 }
 
 func (h *CollectionHandler) InfoPatch(c *gin.Context) {}
+
+func (h *CollectionHandler) GetData(c *gin.Context) {
+	var Info CollectionInfo
+	// response newest data to client
+	if err := Info.GetData(Info.Url); err != nil {
+		logger.Error("get data failed :%v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"data": Info})
+	}
+}
 
 func NewCollectionHandler() *CollectionHandler {
 	return &CollectionHandler{}

@@ -43,7 +43,7 @@ func AuthMiddleware() gin.HandlerFunc {
 // 获取用户信息，根据客户端传来的access token认证
 func GetUserInfo(ctx *gin.Context) {
 	accessToken := ctx.GetHeader("Authorization")
-	logger.Debug("get client token is: %v", accessToken)
+	// logger.Debug("get client token is: %v", accessToken)
 	claims, err := utils.VerifyAccessToken(accessToken)
 	if err != nil {
 		logger.Error("verify token error: ", err)
