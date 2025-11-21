@@ -79,7 +79,7 @@ func (c *UrlInfo) GetAllData() ([]UrlInfo, error) {
 	return urlListData, nil
 }
 
-// // 返回结构体
+// // 返回 结构体
 // func GetCollectionStruct() *CollectionInfo {
 // 	return &CollectionInfo{}
 // }
