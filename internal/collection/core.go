@@ -7,14 +7,14 @@ import (
 )
 
 type UrlInfo struct {
-	Id            int64     `json:"id" db:"id" form:"form" gorm:"column:id"`
-	Date          time.Time `json:"date" db:"updated_at" form:"date" gorm:"column:updated_at"`
-	Url           string    `json:"url" db:"url" form:"url" gorm:"column:url"`
-	InjectionType string    `json:"injectionType" db:"tag" form:"injectionType" gorm:"column:tag"`
-	InjectionPath string    `json:"injectionPath" db:"directories" form:"injectionPath" gorm:"column:directories"`
+	Id            int64     `json:"id"  form:"form" gorm:"column:id"`
+	Date          time.Time `json:"date" form:"date" gorm:"column:updated_at"`
+	Url           string    `json:"url" form:"url" gorm:"column:url"`
+	InjectionType string    `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
+	InjectionPath []string  `json:"injectionPath"  form:"injectionPath" gorm:"column:directories"`
 }
 
-func (c *UrlInfo) InsertData(id int64, date time.Time, url, injectionType, injectionPath string) error {
+func (c *UrlInfo) InsertData(id int64, date time.Time, url, injectionType string, injectionPath []string) error {
 	record := &UrlInfo{
 		id, date, url, injectionType, injectionPath,
 	}
