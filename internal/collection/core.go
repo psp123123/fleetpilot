@@ -3,18 +3,20 @@ package collection
 import (
 	"fleetpilot/backend"
 	"fleetpilot/common/logger"
+	"time"
 )
 
 type UrlInfo struct {
-	Date          string `json:"date" db:"updated_at" form:"date"`
-	Url           string `json:"url" db:"url" form:"url"`
-	InjectionType string `json:"injectionType" db:"tag" form:"injectionType"`
-	InjectionPath string `json:"injectionPath" db:"directories" form:"injectionPath"`
+	Id            int64     `json:"id" db:"id" form:"form"`
+	Date          time.Time `json:"date" db:"updated_at" form:"date"`
+	Url           string    `json:"url" db:"url" form:"url"`
+	InjectionType string    `json:"injectionType" db:"tag" form:"injectionType"`
+	InjectionPath string    `json:"injectionPath" db:"directories" form:"injectionPath"`
 }
 
-func (c *UrlInfo) InsertData(date, url, injectionType, injectionPath string) error {
+func (c *UrlInfo) InsertData(id int64, date time.Time, url, injectionType, injectionPath string) error {
 	record := &UrlInfo{
-		date, url, injectionType, injectionPath,
+		id, date, url, injectionType, injectionPath,
 	}
 
 	ret := backend.DB.Create(record)
