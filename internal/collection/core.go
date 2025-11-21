@@ -1,17 +1,39 @@
 package collection
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"fleetpilot/backend"
 	"fleetpilot/common/logger"
+	"fmt"
 	"time"
 )
 
+// mysql中数据字符串转换切片类型
+type StringSlice []string
+
+// 实现sql.Scanner接口
+func (s *StringSlice) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("falied to scan StringSlice: %v", value)
+	}
+
+	return json.Unmarshal(bytes, s)
+}
+
+// 实现driver.valuer接口
+func (s *StringSlice) Value() (driver.Value, error) {
+	return json.Marshal(s)
+}
+
+// 定义数据查询
 type UrlInfo struct {
-	Id            int64     `json:"id"  form:"form" gorm:"column:id"`
-	Date          time.Time `json:"date" form:"date" gorm:"column:updated_at"`
-	Url           string    `json:"url" form:"url" gorm:"column:url"`
-	InjectionType string    `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
-	InjectionPath []string  `json:"injectionPath"  form:"injectionPath" gorm:"column:directories"`
+	Id            int64       `json:"id"  form:"form" gorm:"column:id"`
+	Date          time.Time   `json:"date" form:"date" gorm:"column:updated_at"`
+	Url           string      `json:"url" form:"url" gorm:"column:url"`
+	InjectionType string      `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
+	InjectionPath StringSlice `json:"injectionPath"  form:"injectionPath" gorm:"column:directories"`
 }
 
 func (c *UrlInfo) InsertData(id int64, date time.Time, url, injectionType string, injectionPath []string) error {
