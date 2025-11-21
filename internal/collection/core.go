@@ -9,6 +9,34 @@ import (
 	"time"
 )
 
+// mysql中数据字符串转换为整数切片类型
+type IntSlice []int
+
+// 实现sql.Scanner接口
+func (i *IntSlice) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		// 如果value不是[]byte类型（例如NULL），尝试处理
+		if value == nil {
+			*i = nil
+			return nil
+		}
+		return fmt.Errorf("failed to scan IntSlice: %v, type: %T", value, value)
+	}
+
+	// 直接将JSON数组解析到IntSlice（[]int）中
+	return json.Unmarshal(bytes, i)
+}
+
+// 实现driver.Valuer接口
+func (i *IntSlice) Value() (driver.Value, error) {
+	// 如果切片为nil或空，返回nil，数据库中会存储为NULL
+	if i == nil || len(*i) == 0 {
+		return nil, nil
+	}
+	return json.Marshal(i)
+}
+
 // mysql中数据字符串转换切片类型
 type StringSlice []string
 
@@ -43,10 +71,10 @@ type UrlInfo struct {
 	InjectionType string      `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
 	InjectionPath StringSlice `json:"injectionPath"  form:"injectionPath" gorm:"column:directories"`
 	Domains       StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
-	Ports         StringSlice `json:"ports" form:"ports" gorm:"column:ports"`
+	Ports         IntSlice    `json:"ports" form:"ports" gorm:"column:ports"`
 }
 
-func (c *UrlInfo) InsertData(id int64, date JSONTime, url, injectionType string, injectionPath, domains, ports StringSlice) error {
+func (c *UrlInfo) InsertData(id int64, date JSONTime, url, injectionType string, injectionPath, domains StringSlice, ports IntSlice) error {
 	record := &UrlInfo{
 		id, date, url, injectionType, injectionPath, domains, ports,
 	}
