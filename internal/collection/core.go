@@ -8,8 +8,8 @@ import (
 type UrlInfo struct {
 	Date          string `json:"date" db:"updated_at" form:"date"`
 	Url           string `json:"url" db:"url" form:"url"`
-	InjectionType string `json:"injectionType" db:"injectionType" form:"injectionType"`
-	InjectionPath string `json:"injectionPath" db:"injectionPath" form:"injectionPath"`
+	InjectionType string `json:"injectionType" db:"tag" form:"injectionType"`
+	InjectionPath string `json:"injectionPath" db:"directories" form:"injectionPath"`
 }
 
 func (c *UrlInfo) InsertData(date, url, injectionType, injectionPath string) error {
