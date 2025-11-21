@@ -11,7 +11,7 @@ type UrlInfo struct {
 	Date          time.Time `json:"date" db:"updated_at" form:"date" gorm:"updated_at"`
 	Url           string    `json:"url" db:"url" form:"url" gorm:"url"`
 	InjectionType string    `json:"injectionType" db:"tag" form:"injectionType" gorm:"tag"`
-	InjectionPath string    `json:"injectionPath" db:"directories" form:"injectionPath" gorm:"tag"`
+	InjectionPath string    `json:"injectionPath" db:"directories" form:"injectionPath" gorm:"directories"`
 }
 
 func (c *UrlInfo) InsertData(id int64, date time.Time, url, injectionType, injectionPath string) error {
