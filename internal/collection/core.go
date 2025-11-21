@@ -27,16 +27,24 @@ func (s *StringSlice) Value() (driver.Value, error) {
 	return json.Marshal(s)
 }
 
+// 自定义时间格式
+type JSONTime time.Time
+
+func (t JSONTime) MarshalJSON() ([]byte, error) {
+	formatted := fmt.Sprintf("\"%s\"", time.Time(t).Format("2006-01-02 15:04:05"))
+	return []byte(formatted), nil
+}
+
 // 定义数据查询
 type UrlInfo struct {
 	Id            int64       `json:"id"  form:"form" gorm:"column:id"`
-	Date          time.Time   `json:"date" form:"date" gorm:"column:updated_at"`
+	Date          JSONTime    `json:"date" form:"date" gorm:"column:updated_at"`
 	Url           string      `json:"url" form:"url" gorm:"column:url"`
 	InjectionType string      `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
 	InjectionPath StringSlice `json:"injectionPath"  form:"injectionPath" gorm:"column:directories"`
 }
 
-func (c *UrlInfo) InsertData(id int64, date time.Time, url, injectionType string, injectionPath []string) error {
+func (c *UrlInfo) InsertData(id int64, date JSONTime, url, injectionType string, injectionPath []string) error {
 	record := &UrlInfo{
 		id, date, url, injectionType, injectionPath,
 	}
