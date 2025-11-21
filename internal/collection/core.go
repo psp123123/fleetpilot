@@ -96,6 +96,17 @@ func (c *UrlInfo) GetData(url string) error {
 	return nil
 }
 
+// delete one data
+func (c *UrlInfo) DeleteData(id int64) error {
+	err := backend.DB.Delete(c, id).Error
+	if err != nil {
+		logger.Error("delete data failed :%v", err)
+		return err
+	}
+
+	return nil
+}
+
 // get all data from mysql
 func (c *UrlInfo) GetAllData() ([]UrlInfo, error) {
 	var urlListData []UrlInfo
