@@ -42,11 +42,12 @@ type UrlInfo struct {
 	Url           string      `json:"url" form:"url" gorm:"column:url"`
 	InjectionType string      `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
 	InjectionPath StringSlice `json:"injectionPath"  form:"injectionPath" gorm:"column:directories"`
+	Domains       StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
 }
 
-func (c *UrlInfo) InsertData(id int64, date JSONTime, url, injectionType string, injectionPath []string) error {
+func (c *UrlInfo) InsertData(id int64, date JSONTime, url, injectionType string, injectionPath, domains StringSlice) error {
 	record := &UrlInfo{
-		id, date, url, injectionType, injectionPath,
+		id, date, url, injectionType, injectionPath, domains,
 	}
 
 	ret := backend.DB.Create(record)
