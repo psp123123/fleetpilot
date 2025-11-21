@@ -7,11 +7,11 @@ import (
 )
 
 type UrlInfo struct {
-	Id            int64     `json:"id" db:"id" form:"form"`
-	Date          time.Time `json:"date" db:"updated_at" form:"date"`
-	Url           string    `json:"url" db:"url" form:"url"`
-	InjectionType string    `json:"injectionType" db:"tag" form:"injectionType"`
-	InjectionPath string    `json:"injectionPath" db:"directories" form:"injectionPath"`
+	Id            int64     `json:"id" db:"id" form:"form" gorm:"id"`
+	Date          time.Time `json:"date" db:"updated_at" form:"date" gorm:"updated_at"`
+	Url           string    `json:"url" db:"url" form:"url" gorm:"url"`
+	InjectionType string    `json:"injectionType" db:"tag" form:"injectionType" gorm:"tag"`
+	InjectionPath string    `json:"injectionPath" db:"directories" form:"injectionPath" gorm:"tag"`
 }
 
 func (c *UrlInfo) InsertData(id int64, date time.Time, url, injectionType, injectionPath string) error {
