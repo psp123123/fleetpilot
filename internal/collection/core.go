@@ -43,6 +43,7 @@ func (c *UrlInfo) GetAllData() ([]UrlInfo, error) {
 		logger.Error("获取url列表失败:%v", ret.Error)
 		return nil, ret.Error
 	}
+	logger.Debug("get all data :%v", urlListData)
 	return urlListData, nil
 }
 
