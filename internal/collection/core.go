@@ -70,6 +70,7 @@ type UrlInfo struct {
 	Url           string      `json:"url" form:"url" gorm:"column:url"`
 	InjectionType string      `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
 	InjectionPath StringSlice `json:"injectionPath"  form:"injectionPath" gorm:"column:directories"`
+	Injection     string      `json:"injection"  form:"injection" gorm:"column:injection"`
 	Domains       StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
 	Ports         IntSlice    `json:"ports" form:"ports" gorm:"column:ports;serializer:json"`
 	ManagerUrl    string      `json:"managerUrl" form:"managerUrl"`   // gorm:"column:manager_url;serializer:json"`
@@ -77,12 +78,10 @@ type UrlInfo struct {
 	ManagerPass   string      `json:"managerPass" form:"managerPass"` //gorm:"column:manager_pass;seiralizer:json"`
 }
 
-func (c *UrlInfo) InsertData(id int64, date JSONTime, url, injectionType string, injectionPath, domains StringSlice, ports IntSlice, ManagerUrl, ManagerUser, ManagerPass string) error {
-	record := &UrlInfo{
-		id, date, url, injectionType, injectionPath, domains, ports, ManagerUrl, ManagerUser, ManagerPass,
-	}
+func (c *UrlInfo) InsertData(url, injectionType, injection, ManagerUrl, ManagerUser, ManagerPass string) error {
+	//record := &UrlInfo{}
 
-	ret := backend.DB.Create(record)
+	ret := backend.DB.Create(c)
 	if ret.Error != nil {
 		logger.Error("insert failed :%v", ret.Error)
 	}
