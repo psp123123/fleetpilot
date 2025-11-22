@@ -63,6 +63,39 @@ func (t JSONTime) MarshalJSON() ([]byte, error) {
 	return []byte(formatted), nil
 }
 
+func (t JSONTime) Value() (driver.Value, error) {
+	ts := time.Time(t)
+	return ts.Format("2006-01-02 15:04:05"), nil
+}
+
+func (t *JSONTime) Scan(value interface{}) error {
+	if value == nil {
+		*t = JSONTime(time.Time{})
+		return nil
+	}
+
+	switch v := value.(type) {
+	case time.Time:
+		*t = JSONTime(v)
+	case []byte:
+		parsed, err := time.Parse("2006-01-02 15:04:05", string(v))
+		if err != nil {
+			return err
+		}
+		*t = JSONTime(parsed)
+	case string:
+		parsed, err := time.Parse("2006-01-02 15:04:05", v)
+		if err != nil {
+			return err
+		}
+		*t = JSONTime(parsed)
+	default:
+		return fmt.Errorf("unsupported type %T", v)
+	}
+
+	return nil
+}
+
 // 定义数据查询
 type UrlInfo struct {
 	Id            int64       `json:"id"  form:"form" gorm:"column:id"`
