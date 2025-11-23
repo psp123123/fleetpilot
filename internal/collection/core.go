@@ -42,17 +42,24 @@ type StringSlice []string
 
 // 实现sql.Scanner接口
 func (s *StringSlice) Scan(value interface{}) error {
-	bytes, ok := value.([]byte)
-	if !ok {
-		return fmt.Errorf("falied to scan StringSlice: %v", value)
+	if value == nil {
+		*s = nil
+		return nil
 	}
 
-	return json.Unmarshal(bytes, s)
-}
+	bytes, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("failed to scan StringSlice: %v", value)
+	}
 
-// 实现driver.valuer接口
-func (s *StringSlice) Value() (driver.Value, error) {
-	return json.Marshal(s)
+	// 尝试 JSON 数组解析
+	if bytes[0] == '[' {
+		return json.Unmarshal(bytes, s)
+	}
+
+	// 普通字符串 → 转成切片
+	*s = StringSlice{string(bytes)}
+	return nil
 }
 
 // 自定义时间格式
