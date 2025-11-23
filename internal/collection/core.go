@@ -62,6 +62,34 @@ func (s *StringSlice) Scan(value interface{}) error {
 	return nil
 }
 
+func (s *StringSlice) UnmarshalJSON(data []byte) error {
+	// 情况1：null 或 空
+	if string(data) == "null" || len(data) == 0 {
+		*s = []string{}
+		return nil
+	}
+
+	// 情况2：是 JSON 数组 → 正常解析
+	var arr []string
+	if err := json.Unmarshal(data, &arr); err == nil {
+		*s = arr
+		return nil
+	}
+
+	// 情况3：是字符串 → 自动转为单元素数组
+	var str string
+	if err := json.Unmarshal(data, &str); err == nil {
+		if str == "" {
+			*s = []string{}
+		} else {
+			*s = []string{str} // ← 关键：wrap 成数组
+		}
+		return nil
+	}
+
+	return fmt.Errorf("cannot unmarshal %s to StringSlice", string(data))
+}
+
 // 自定义时间格式
 type JSONTime time.Time
 
