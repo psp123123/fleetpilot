@@ -184,3 +184,7 @@ func (c *UrlInfo) GetAllData() ([]UrlInfo, error) {
 	logger.Debug("get all data :%v", urlListData)
 	return urlListData, nil
 }
+
+func (UrlInfo) TableName() string {
+	return "url_info" // 替换为你的实际表名（建议查数据库确认）
+}
