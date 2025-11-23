@@ -152,30 +152,35 @@ func InsertUrlInfo(
 }
 
 // get data from mysql
-func (c *UrlInfo) GetData(url string) error {
+// func (c *UrlInfo) GetData(url string) error {
 
-	ret := backend.DB.Where("url = ?", url).First(c)
-	if ret.Error != nil {
-		logger.Error("get %s from mysql failed :%v", url, ret.Error)
-	}
-	return nil
+//		ret := backend.DB.Where("url = ?", url).First(c)
+//		if ret.Error != nil {
+//			logger.Error("get %s from mysql failed :%v", url, ret.Error)
+//		}
+//		return nil
+//	}
+func (c *UrlInfo) GetData(url string) error {
+	return backend.DB.Model(&UrlInfo{}).Where("url = ?", url).First(c).Error
 }
 
 // delete one data
 func (c *UrlInfo) DeleteData(id int64) error {
-	err := backend.DB.Delete(c, id).Error
-	if err != nil {
-		logger.Error("delete data failed :%v", err)
-		return err
-	}
+	// err := backend.DB.Delete(c, id).Error
+	// if err != nil {
+	// 	logger.Error("delete data failed :%v", err)
+	// 	return err
+	// }
 
-	return nil
+	// return nil
+	return backend.DB.Model(&UrlInfo{}).Where("id = ?", id).Delete(&UrlInfo{}).Error
 }
 
 // get all data from mysql
 func (c *UrlInfo) GetAllData() ([]UrlInfo, error) {
 	var urlListData []UrlInfo
-	ret := backend.DB.Find(&urlListData)
+	//ret := backend.DB.Find(&urlListData)
+	ret := backend.DB.Model(&UrlInfo{}).Find(&urlListData)
 
 	if ret.Error != nil {
 		logger.Error("获取url列表失败:%v", ret.Error)
