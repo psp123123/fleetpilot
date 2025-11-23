@@ -121,7 +121,7 @@ type UrlInfo struct {
 }
 
 func InsertUrlInfo(
-	url, injectionType, managerUrl, managerUser, managerPass string, injection StringSlice,
+	url, injectionType, managerUrl, managerUser, managerPass string, injection *StringSlice,
 ) error {
 	// ... [校验 & 密码加密代码] ...
 
@@ -131,7 +131,7 @@ func InsertUrlInfo(
 	record := &UrlInfo{
 		Url:           url,
 		InjectionType: injectionType,
-		Injection:     &injection,
+		Injection:     injection,
 		ManagerUrl:    managerUrl,
 		ManagerUser:   managerUser,
 		ManagerPass:   managerPass,
