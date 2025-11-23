@@ -32,7 +32,7 @@ func (h *CollectionHandler) InfoCreate(c *gin.Context) {
 	}
 
 	// insert data to mysql
-	if err := Info.InsertData(Info.Url, Info.InjectionType, Info.Injection, Info.ManagerUrl, Info.ManagerUser, Info.ManagerPass); err != nil {
+	if err := InsertUrlInfo(Info.Url, Info.InjectionType, Info.Injection, Info.ManagerUrl, Info.ManagerUser, Info.ManagerPass); err != nil {
 		logger.Error("data writed failed :%V", err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}

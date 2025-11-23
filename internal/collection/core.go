@@ -111,13 +111,36 @@ type UrlInfo struct {
 	ManagerPass   string      `json:"managerPass" form:"managerPass"` //gorm:"column:manager_pass;seiralizer:json"`
 }
 
-func (c *UrlInfo) InsertData(url, injectionType, injection, ManagerUrl, ManagerUser, ManagerPass string) error {
-	//record := &UrlInfo{}
+func InsertUrlInfo(
+	url, injectionType, injection, managerUrl, managerUser, managerPass string,
+) error {
+	// ... [校验 & 密码加密代码] ...
 
-	ret := backend.DB.Create(c)
-	if ret.Error != nil {
-		logger.Error("insert failed :%v", ret.Error)
+	// ✅ 关键：用 time.Now() 生成当前时间
+	now := time.Now()
+
+	record := &UrlInfo{
+		Url:           url,
+		InjectionType: injectionType,
+		Injection:     injection,
+		ManagerUrl:    managerUrl,
+		ManagerUser:   managerUser,
+		ManagerPass:   managerPass,
+
+		// ⭐ 插入时间由后端生成（非前端传入！）
+		Date: JSONTime(now), // ← 这里赋值当前时间
+
+		InjectionPath: make(StringSlice, 0),
+		Domains:       make(StringSlice, 0),
+		Ports:         make(IntSlice, 0),
 	}
+
+	ret := backend.DB.Create(record)
+	if ret.Error != nil {
+		logger.Error("insert failed: %v", ret.Error)
+		return ret.Error
+	}
+
 	return nil
 }
 
