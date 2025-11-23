@@ -103,7 +103,7 @@ type UrlInfo struct {
 	Url           string      `json:"url" form:"url" gorm:"column:url"`
 	InjectionType string      `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
 	Directories   StringSlice `json:"directories"  form:"directories" gorm:"column:directories"`
-	Injection     string      `json:"injection"  form:"injection" gorm:"column:injection"`
+	Injection     StringSlice `json:"injection"  form:"injection" gorm:"column:injection"`
 	Domains       StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
 	Ports         IntSlice    `json:"ports" form:"ports" gorm:"column:ports;serializer:json"`
 	ManagerUrl    string      `json:"managerUrl" form:"managerUrl"`   // gorm:"column:manager_url;serializer:json"`
@@ -112,7 +112,7 @@ type UrlInfo struct {
 }
 
 func InsertUrlInfo(
-	url, injectionType, injection, managerUrl, managerUser, managerPass string,
+	url, injectionType, managerUrl, managerUser, managerPass string, injection StringSlice,
 ) error {
 	// ... [校验 & 密码加密代码] ...
 
