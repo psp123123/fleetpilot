@@ -179,8 +179,9 @@ func (c *UrlInfo) DeleteData(id int64) error {
 // get all data from mysql
 func (c *UrlInfo) GetAllData() ([]UrlInfo, error) {
 	var urlListData []UrlInfo
-	//ret := backend.DB.Find(&urlListData)
-	ret := backend.DB.Model(&UrlInfo{}).Find(&urlListData)
+	ret := backend.DB.Find(&urlListData)
+	// err := backend.DB.Find(&list).Error
+	// ret := backend.DB.Model(&UrlInfo{}).Find(&urlListData)
 
 	if ret.Error != nil {
 		logger.Error("获取url列表失败:%v", ret.Error)
