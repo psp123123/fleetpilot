@@ -110,10 +110,10 @@ type UrlInfo struct {
 	Url           string   `json:"url" form:"url" gorm:"column:url"`
 	InjectionType string   `json:"injectionType" form:"injectionType" gorm:"column:tag"`
 
-	Directories StringSlice `json:"directories" form:"directories" gorm:"column:directories"`
-	Domains     StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
-	Ports       IntSlice    `json:"ports" form:"ports" gorm:"column:ports"`
-	Injection   StringSlice `json:"injection" form:"injection" gorm:"column:injection"`
+	Directories StringSlice `json:"directories" form:"directories" gorm:"column:directories;type:json"`
+	Domains     StringSlice `json:"domains" form:"domains" gorm:"column:domains;type:json"`
+	Ports       IntSlice    `json:"ports" form:"ports" gorm:"column:ports;type:json"`
+	Injection   StringSlice `json:"injection" form:"injection" gorm:"column:injection;type:json"`
 
 	ManagerUrl  string `json:"managerUrl" form:"managerUrl"`
 	ManagerUser string `json:"managerUser" form:"managerUser"`
