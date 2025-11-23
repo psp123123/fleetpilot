@@ -110,10 +110,10 @@ type UrlInfo struct {
 	Url           string   `json:"url" form:"url" gorm:"column:url"`
 	InjectionType string   `json:"injectionType" form:"injectionType" gorm:"column:tag"`
 
-	Directories *StringSlice `json:"directories" form:"directories" gorm:"column:directories"`
-	Injection   *StringSlice `json:"injection" form:"injection" gorm:"column:injection"`
-	Domains     *StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
-	Ports       *IntSlice    `json:"ports" form:"ports" gorm:"column:ports"`
+	Directories StringSlice `json:"directories" form:"directories" gorm:"column:directories"`
+	Domains     StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
+	Ports       IntSlice    `json:"ports" form:"ports" gorm:"column:ports"`
+	Injection   StringSlice `json:"injection" form:"injection" gorm:"column:injection"`
 
 	ManagerUrl  string `json:"managerUrl" form:"managerUrl"`
 	ManagerUser string `json:"managerUser" form:"managerUser"`
@@ -121,7 +121,7 @@ type UrlInfo struct {
 }
 
 func InsertUrlInfo(
-	url, injectionType, managerUrl, managerUser, managerPass string, injection *StringSlice,
+	url, injectionType, managerUrl, managerUser, managerPass string, injection StringSlice,
 ) error {
 	// ... [校验 & 密码加密代码] ...
 
@@ -137,9 +137,9 @@ func InsertUrlInfo(
 		ManagerPass:   managerPass,
 		Date:          JSONTime(now),
 
-		Directories: &StringSlice{},
-		Domains:     &StringSlice{},
-		Ports:       &IntSlice{},
+		Directories: StringSlice{},
+		Domains:     StringSlice{},
+		Ports:       IntSlice{},
 	}
 
 	ret := backend.DB.Create(record)
