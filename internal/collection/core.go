@@ -105,17 +105,19 @@ func (t *JSONTime) Scan(value interface{}) error {
 
 // 定义数据查询
 type UrlInfo struct {
-	Id            int64       `json:"id"  form:"form" gorm:"column:id"`
-	Date          JSONTime    `json:"date" form:"date" gorm:"column:updated_at"`
-	Url           string      `json:"url" form:"url" gorm:"column:url"`
-	InjectionType string      `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
-	Directories   StringSlice `json:"directories"  form:"directories" gorm:"column:directories"`
-	Injection     StringSlice `json:"injection"  form:"injection" gorm:"column:injection"`
-	Domains       StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
-	Ports         IntSlice    `json:"ports" form:"ports" gorm:"column:ports;serializer:json"`
-	ManagerUrl    string      `json:"managerUrl" form:"managerUrl"`   // gorm:"column:manager_url;serializer:json"`
-	ManagerUser   string      `json:"managerUser" form:"managerUser"` //gorm:"column:manager_user;serializer:json"`
-	ManagerPass   string      `json:"managerPass" form:"managerPass"` //gorm:"column:manager_pass;seiralizer:json"`
+	Id            int64    `json:"id" form:"id" gorm:"column:id"`
+	Date          JSONTime `json:"date" form:"date" gorm:"column:updated_at"`
+	Url           string   `json:"url" form:"url" gorm:"column:url"`
+	InjectionType string   `json:"injectionType" form:"injectionType" gorm:"column:tag"`
+
+	Directories *StringSlice `json:"directories" form:"directories" gorm:"column:directories"`
+	Injection   *StringSlice `json:"injection" form:"injection" gorm:"column:injection"`
+	Domains     *StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
+	Ports       *IntSlice    `json:"ports" form:"ports" gorm:"column:ports"`
+
+	ManagerUrl  string `json:"managerUrl" form:"managerUrl"`
+	ManagerUser string `json:"managerUser" form:"managerUser"`
+	ManagerPass string `json:"managerPass" form:"managerPass"`
 }
 
 func InsertUrlInfo(
@@ -129,17 +131,15 @@ func InsertUrlInfo(
 	record := &UrlInfo{
 		Url:           url,
 		InjectionType: injectionType,
-		Injection:     injection,
+		Injection:     &injection,
 		ManagerUrl:    managerUrl,
 		ManagerUser:   managerUser,
 		ManagerPass:   managerPass,
+		Date:          JSONTime(now),
 
-		// ⭐ 插入时间由后端生成（非前端传入！）
-		Date: JSONTime(now), // ← 这里赋值当前时间
-
-		Directories: make(StringSlice, 0),
-		Domains:     make(StringSlice, 0),
-		Ports:       make(IntSlice, 0),
+		Directories: &StringSlice{},
+		Domains:     &StringSlice{},
+		Ports:       &IntSlice{},
 	}
 
 	ret := backend.DB.Create(record)
