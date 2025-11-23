@@ -102,7 +102,7 @@ type UrlInfo struct {
 	Date          JSONTime    `json:"date" form:"date" gorm:"column:updated_at"`
 	Url           string      `json:"url" form:"url" gorm:"column:url"`
 	InjectionType string      `json:"injectionType"  form:"injectionType" gorm:"column:tag"`
-	InjectionPath StringSlice `json:"injectionPath"  form:"injectionPath" gorm:"column:directories"`
+	Directories   StringSlice `json:"directories"  form:"directories" gorm:"column:directories"`
 	Injection     string      `json:"injection"  form:"injection" gorm:"column:injection"`
 	Domains       StringSlice `json:"domains" form:"domains" gorm:"column:domains"`
 	Ports         IntSlice    `json:"ports" form:"ports" gorm:"column:ports;serializer:json"`
@@ -130,9 +130,9 @@ func InsertUrlInfo(
 		// ⭐ 插入时间由后端生成（非前端传入！）
 		Date: JSONTime(now), // ← 这里赋值当前时间
 
-		InjectionPath: make(StringSlice, 0),
-		Domains:       make(StringSlice, 0),
-		Ports:         make(IntSlice, 0),
+		Directories: make(StringSlice, 0),
+		Domains:     make(StringSlice, 0),
+		Ports:       make(IntSlice, 0),
 	}
 
 	ret := backend.DB.Create(record)
